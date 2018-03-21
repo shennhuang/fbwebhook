@@ -1,0 +1,295 @@
+swagger: '2.0'
+info: 
+    description: facebook graph api。 
+    version: '2.12' 
+    title: facebook
+host: graph.facebook.com
+basePath: /v2.11
+tags:
+   -
+        name: graph api
+        description: facebook 的圖形API
+schemes:
+   - https 
+produces:
+   - application/json
+paths:
+    /{user-id}:
+        get:
+            description: 取得粉專(page)名稱及id
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+    /{user-id}_{page-id}:
+        get:
+            description: 取得貼文之內容
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: message
+                    description: 要發出的貼文訊息
+                    required: true
+                    type: string
+            responses:
+               '200':
+                    description: 回傳貼文詳細資料
+                    schema:
+                        type: object
+                        properties:
+                            created_time: 
+                                type: string
+                                description: 貼文創立時間(UTC+0)
+                            message: 
+                                type: string
+                                description: 貼文內容
+                            id: 
+                                type: string
+                                description: id格式:{user-id}_{post-id}
+        post:
+            description: 刪除貼文
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: method
+                    description: =delete 即可刪除
+                    required: true
+                    type: string
+            responses:
+               '200':
+                    description: 回傳貼文詳細資料
+                    schema:
+                        type: object
+                        properties:
+                            success: 
+                                type: boolean
+                                description: 回傳是否成功
+        post:
+            description: 編輯貼文
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: message
+                    description: 要發出的貼文訊息
+                    required: true
+                    type: string
+        delete:
+            description: 刪除貼文
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+            responses:
+               '200':
+                    description: 回傳貼文詳細資料
+                    schema:
+                        type: object
+                        properties:
+                            success: 
+                                type: boolean
+                                description: 回傳是否成功
+                            
+    /{user-id}/feed:
+        get:
+            tags:
+                - feed
+            description: 取得對方所有貼文
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: fields
+                    description: 可下過濾條件
+                    required: false
+                    type: string
+        post:
+            description: 貼文至對方Timeline
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: message
+                    description: 要發出的貼文訊息
+                    required: true
+                    type: string
+            responses:
+               '200':
+                    description: 回傳{user-id}_{post-id}
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                                description: id格式:{user-id}_{post-id}
+    /{user-id}_{page-id}/comments:
+        get:
+            description: 取得某貼文下的留言
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: messages
+                    description: 留言的訊息
+                    required: false
+                    type: string
+            responses:
+               '200':
+                    description: 回傳{page-id}_{commemt-id}
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                                description: id格式:{page-id}_{commemt-id}
+        post:
+            description: 在某貼文下留言
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: message
+                    description: 要發出的貼文訊息
+                    required: true
+                    type: string
+            responses:
+               '200':
+                    description: 回傳{user-id}_{post-id}
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                                description: id格式:{user-id}_{post-id}
+    /{page-id}_{comment-id}/comments:
+        get:
+            description: 取得某留言下的所有子留言
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+        post:
+            description: 在某留言下回覆留言
+            produces:
+                - application/json
+            parameters:
+                -
+                    in: path
+                    name: user-id
+                    description: 對象之ID
+                    required: true
+                    type: string
+                -
+                    in: path
+                    name: page-id
+                    description: 對象之貼文
+                    required: true
+                    type: string
+                -
+                    in: query
+                    name: messages
+                    description: 留言的訊息
+                    required: false
+                    type: string
